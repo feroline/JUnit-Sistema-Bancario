@@ -66,6 +66,7 @@ public class Conta implements Cadastro {
     private List<Movimentacao> movimentacoes;
 
     public Conta() {
+
         // TODO: Você precisa implementar este método
     }
 
@@ -95,15 +96,15 @@ public class Conta implements Cadastro {
      */
     public void addMovimentacao(Movimentacao movimentacao) {
 
-        if(movimentacao.getTipo() == 'C'){
-            movimentacao.setValor(movimentacao.getValor() + getSaldo());
-        } else if (movimentacao.getTipo() == 'D') {
-            movimentacao.setValor(getSaldo() - movimentacao.getValor());
-        }else {
-            System.err.println("Tipo de conta não existente");
+
+        if(movimentacao.getTipo() ==  'C'){
+            setSaldo(getSaldo() + movimentacao.getValor());
+        }else if(movimentacao.getTipo() == 'D'){
+            setSaldo(getSaldo() - movimentacao.getValor());
+        }else if(movimentacao.getTipo() != 'D'&& movimentacao.getTipo() != 'C'){
+           System.err.println("Tipo invalido, tipos validos : D = Debito e C = Credito");
         }
         movimentacao.setConfirmada(true);
-        this.movimentacoes.add(movimentacao);
     }
 
     /**
