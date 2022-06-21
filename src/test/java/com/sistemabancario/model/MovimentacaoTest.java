@@ -195,36 +195,4 @@ class MovimentacaoTest {
 
     }
 
-
-    /**
-     * Valor monetário da movimentação.
-     * O valor não deve ser negativo, uma vez que existe o atributo {@link #tipo} (R02).
-     * Se o tipo for débito, o valor da movimentação não pode ser superior ao saldo total da {@link Conta} (R03).
-     */
-
-//    @Test
-//    void valorMovimentacaoDebitoR03() throws Exception {
-//        final char debito = 'C';
-//        final Conta conta = new Conta();
-//        conta.setEspecial(true);
-//        //conta.setEspecial(false);
-//        conta.setSaldo(100.00);
-//        if(conta.isEspecial()){
-//            conta.setLimite(150.00);
-//        }
-//
-//        final Movimentacao movimentacao = new Movimentacao(conta);
-//        movimentacao.setTipo('C');
-//        movimentacao.setValor(100.0);
-//
-//        System.out.println(conta.getSaldoTotal());
-//
-//        if(movimentacao.getValor() > conta.getSaldoTotal()){
-//            throw new Exception("O valor da movimentação deve ser inferior ao saldo total na conta."+
-//                    "\n Saldo Total: "+ conta.getSaldoTotal()+
-//                    "\n Movimentação: "+ movimentacao.getValor()
-//            );
-//        }
-//    }
-
 }
