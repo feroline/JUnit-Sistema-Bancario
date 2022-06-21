@@ -124,7 +124,7 @@ class MovimentacaoTest {
         return movimentacao;
     }
     @Test
-    void testValorDebito() throws Exception {
+    void testValorDebitoR03() throws Exception {
         final double saldo = 500.00;
         final double valor = 500.00;
 
@@ -142,7 +142,7 @@ class MovimentacaoTest {
     }
 
     @Test
-    void testValorDebitoEspecial() throws Exception {
+    void testValorDebitoEspecialR03() throws Exception {
         final double saldo = 500.00;
         final double valor = 500.00;
 
@@ -161,7 +161,7 @@ class MovimentacaoTest {
     }
 
     @Test
-    void testValorCredito() throws Exception {
+    void testValorCreditoR03() throws Exception {
         Conta conta = newConta(100.00,false);
         Movimentacao movimentacao = newMovimentacao(credito,300.00, conta);
 
@@ -177,7 +177,7 @@ class MovimentacaoTest {
 
     }
     @Test
-    void testValorCreditoEspecial() throws Exception {
+    void testValorCreditoEspecialR03() throws Exception {
         final double saldo = 100.00;
         final double valor = 300.00;
 
@@ -194,5 +194,24 @@ class MovimentacaoTest {
         }
 
     }
+
+    /**
+     * Indica se a movimentação foi confirmada, neste caso, devendo ser registrada no saldo da
+     * conta, quando for adicionada à lista de movimentações usando
+     * {@link Conta#addMovimentacao(Movimentacao)}.
+     *
+     * <ul>
+     *  <li>Movimentacoes devem ser instanciadas como "confirmadas" por padrão (R04).</li>
+     *  <li>
+     *      Somente operações como depósito em cheque devem ser
+     *      registradas inicialmente como não confirmadas. Após uma operação ser
+     *      confirmada, deve-se atualizar o saldo da conta.
+     *  <li>
+     * </ul>
+     *
+     * @see Conta#depositoDinheiro(double)
+     * @see Conta#depositoCheque(double)
+     */
+
 
 }

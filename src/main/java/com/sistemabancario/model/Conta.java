@@ -105,6 +105,7 @@ public class Conta implements Cadastro {
            System.err.println("Tipo invalido, tipos validos : D = Debito e C = Credito");
         }
         movimentacao.setConfirmada(true);
+
     }
 
     /**
