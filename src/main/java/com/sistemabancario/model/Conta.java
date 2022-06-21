@@ -1,5 +1,6 @@
 package com.sistemabancario.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -74,7 +75,7 @@ public class Conta implements Cadastro {
 
         //this.setId(this.getMovimentacoes().size());
         // TODO: Você precisa implementar este método
-
+        movimentacoes = new ArrayList<>();
 
     }
 
@@ -104,15 +105,15 @@ public class Conta implements Cadastro {
      */
     public void addMovimentacao(Movimentacao movimentacao) {
 
-        //movimentacao.setConfirmada(true);
-        //setMovimentacoes(movimentacao);
         if(movimentacao.getTipo() ==  'C'){
-            setSaldo(getSaldo() + movimentacao.getValor());
+            movimentacao.getConta().setSaldo(getSaldo() + movimentacao.getValor()+2);
         }else if(movimentacao.getTipo() == 'D'){
-            setSaldo(getSaldo() - movimentacao.getValor());
+            movimentacao.getConta().setSaldo(getSaldo() - movimentacao.getValor());
         }else if(movimentacao.getTipo() != 'D'&& movimentacao.getTipo() != 'C'){
             System.err.println("Tipo invalido, tipos validos : D = Debito e C = Credito");
         }
+
+        movimentacao.getConta().getMovimentacoes().add(movimentacao);
 
     }
 
@@ -204,7 +205,8 @@ public class Conta implements Cadastro {
     public void setEspecial(boolean especial) {
         this.especial = especial;
 
-    } public void setSaldo(double saldo) {
+    }
+    public void setSaldo(double saldo) {
         this.saldo = saldo;
     }
 

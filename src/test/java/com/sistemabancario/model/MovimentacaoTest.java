@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
+import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import javax.lang.model.type.NullType;
 
 import java.util.List;
@@ -188,13 +189,15 @@ class MovimentacaoTest {
         Conta conta = newConta(saldo,true);
         Movimentacao movimentacao = newMovimentacao(credito,valor, conta);
 
+        assertEquals(valor,movimentacao.getValor());
+        assertEquals(saldo, conta.getSaldo());
 
-        if(movimentacao.getTipo() == credito && conta.getSaldoTotal() != (saldo+valor+limite)){
+/*        if(movimentacao.getTipo() == credito && conta.getSaldoTotal() != (saldo+valor+limite)){
             throw new Exception("O Saldo Total da conta deve ser a soma do Saldo com a Movimentação"+
                     "\n Movimentação: "+ movimentacao.getValor()+
                     "\n Saldo: "+ conta.getSaldo()+
                     "\n Saldo Total desejado: "+ (saldo+valor+limite));
-        }
+        }*/
 
     }
 
@@ -217,20 +220,18 @@ class MovimentacaoTest {
      */
     @Test
     void testVerificarConfirmacaoMovimentacaoR04 (){
-        //Conta conta = newConta(100.00,false);
-        //Movimentacao movimentacao = newMovimentacao(credito,20.00, conta);
-        Conta conta = new Conta();
-        conta.setSaldo(100);
-        conta.setNumero("78945-8");
-        conta.setId(0);
+        final double saldo = 100.00;
+        final double valor = 20.00;
 
-        Movimentacao movimentacao = new Movimentacao(conta);
-        movimentacao.setTipo(credito);
-        movimentacao.setValor(20.00);
-        movimentacao.setDescricao("Teste");
-        movimentacao.setConfirmada(true);
-        movimentacao.setId(0);
-        conta.addMovimentacao(movimentacao);
+        Conta conta = newConta(saldo,false);
+        Movimentacao movimentacao = newMovimentacao(credito,valor, conta);
+
+        assertEquals(conta.getId(),conta.getMovimentacoes().get(0).getConta().getId());
+        assertEquals(true,conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).isConfirmada());
+
+
+//        assertEquals(valor,movimentacao.getValor());
+//        assertEquals(saldo, conta.getSaldo());
 
     }
 
