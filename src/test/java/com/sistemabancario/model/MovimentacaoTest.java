@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.lang.model.type.NullType;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -24,9 +26,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Ana Carolina Rodrigues Rocha
  */
 class MovimentacaoTest {
-    private final char debito = 'D';
-    private final char credito = 'C';
-    private final double limite = 150.00;
+    protected final char debito = 'D';
+    protected final char credito = 'C';
+    protected final double limite = 150.00;
 
     @Test
     void testGetId() {
@@ -104,6 +106,8 @@ class MovimentacaoTest {
     private Conta newConta(double saldo, boolean especial){
         Conta conta = new Conta();
         conta.setSaldo(saldo);
+        conta.setNumero("78945-8");
+        conta.setId(0);
 
         if (especial){
             conta.setEspecial(true);
@@ -120,6 +124,10 @@ class MovimentacaoTest {
         Movimentacao movimentacao = new Movimentacao(conta);
         movimentacao.setTipo(tipo);
         movimentacao.setValor(valor);
+        movimentacao.setDescricao("Teste");
+        movimentacao.setConfirmada(true);
+        movimentacao.setId(0);
+        conta.addMovimentacao(movimentacao);
 
         return movimentacao;
     }
@@ -130,8 +138,6 @@ class MovimentacaoTest {
 
         Conta conta = newConta(saldo,true);
         Movimentacao movimentacao = newMovimentacao(debito,valor, conta);
-
-        conta.addMovimentacao(movimentacao);
 
         if(movimentacao.getTipo() == debito && movimentacao.getValor() > (valor+saldo+limite)){
             throw new Exception("O valor da movimentação deve ser menor que o Saldo Total da conta"+
@@ -150,7 +156,6 @@ class MovimentacaoTest {
         Movimentacao movimentacao = newMovimentacao(debito,valor, conta);
 
         double saldoAntigo =  conta.getSaldo();
-        conta.addMovimentacao(movimentacao);
 
         if(movimentacao.getTipo() == debito && movimentacao.getValor() > (saldo+limite)){
             throw new Exception("O valor da movimentação deve ser menor que o Saldo Total da conta"+
@@ -166,7 +171,6 @@ class MovimentacaoTest {
         Movimentacao movimentacao = newMovimentacao(credito,300.00, conta);
 
         double saldoAntigo =  conta.getSaldo();
-        conta.addMovimentacao(movimentacao);
 
         if(movimentacao.getTipo() == credito && conta.getSaldoTotal() != (movimentacao.getValor() + saldoAntigo)){
             throw new Exception("O Saldo Total da conta deve ser a soma do Saldo com a Movimentação"+
@@ -184,7 +188,6 @@ class MovimentacaoTest {
         Conta conta = newConta(saldo,true);
         Movimentacao movimentacao = newMovimentacao(credito,valor, conta);
 
-        conta.addMovimentacao(movimentacao);
 
         if(movimentacao.getTipo() == credito && conta.getSaldoTotal() != (saldo+valor+limite)){
             throw new Exception("O Saldo Total da conta deve ser a soma do Saldo com a Movimentação"+
@@ -212,6 +215,23 @@ class MovimentacaoTest {
      * @see Conta#depositoDinheiro(double)
      * @see Conta#depositoCheque(double)
      */
+    @Test
+    void testVerificarConfirmacaoMovimentacaoR04 (){
+        //Conta conta = newConta(100.00,false);
+        //Movimentacao movimentacao = newMovimentacao(credito,20.00, conta);
+        Conta conta = new Conta();
+        conta.setSaldo(100);
+        conta.setNumero("78945-8");
+        conta.setId(0);
 
+        Movimentacao movimentacao = new Movimentacao(conta);
+        movimentacao.setTipo(credito);
+        movimentacao.setValor(20.00);
+        movimentacao.setDescricao("Teste");
+        movimentacao.setConfirmada(true);
+        movimentacao.setId(0);
+        conta.addMovimentacao(movimentacao);
+
+    }
 
 }

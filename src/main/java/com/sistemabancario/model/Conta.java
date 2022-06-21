@@ -1,9 +1,8 @@
 package com.sistemabancario.model;
 
-import javax.swing.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Representa uma conta bancária de um determinado {@link Cliente}, tendo os
@@ -66,8 +65,17 @@ public class Conta implements Cadastro {
     private List<Movimentacao> movimentacoes;
 
     public Conta() {
+        Random aleatorio = new Random();
+        //Gera o número da conta aleatóriamente
+        //TODO: Retirar isso daqui antes de entregar e adicionar teste de conta
+        String numConta = "";
+       // for (int i=0; i<=6; i++ )
+       //     numConta += i != 5 ? String.valueOf(aleatorio.nextInt(10)) : "-";
 
+        //this.setId(this.getMovimentacoes().size());
         // TODO: Você precisa implementar este método
+
+
     }
 
     public Conta(Agencia agencia, boolean especial, final double limite) {
@@ -96,15 +104,15 @@ public class Conta implements Cadastro {
      */
     public void addMovimentacao(Movimentacao movimentacao) {
 
-
+        //movimentacao.setConfirmada(true);
+        //setMovimentacoes(movimentacao);
         if(movimentacao.getTipo() ==  'C'){
             setSaldo(getSaldo() + movimentacao.getValor());
         }else if(movimentacao.getTipo() == 'D'){
             setSaldo(getSaldo() - movimentacao.getValor());
         }else if(movimentacao.getTipo() != 'D'&& movimentacao.getTipo() != 'C'){
-           System.err.println("Tipo invalido, tipos validos : D = Debito e C = Credito");
+            System.err.println("Tipo invalido, tipos validos : D = Debito e C = Credito");
         }
-        movimentacao.setConfirmada(true);
 
     }
 

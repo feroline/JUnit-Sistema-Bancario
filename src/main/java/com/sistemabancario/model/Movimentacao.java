@@ -1,5 +1,7 @@
 package com.sistemabancario.model;
 
+import java.util.Random;
+
 /**
  * Representa uma movimentação em uma {@link Conta} bancária, que pode indicar entrada ou saída.
  *
@@ -61,7 +63,12 @@ public class Movimentacao implements Cadastro {
      */
     public Movimentacao(Conta conta){
 
-        this.conta = conta;
+        this.setConta(conta);
+        this.setConfirmada(true);
+
+        //TODO: COLOCAR O VALOR ENTRE O ÚLTIMO E ÚLTIMO+1
+
+
 
     }
 
@@ -94,7 +101,6 @@ public class Movimentacao implements Cadastro {
     public double getValor() {
         return valor;
     }
-
     public void setValor(double valor) {
         this.valor = valor;
     }
@@ -105,6 +111,14 @@ public class Movimentacao implements Cadastro {
 
     public void setConfirmada(boolean confirmada) {
         this.confirmada = confirmada;
+    }
+
+    public void setConta(Conta conta) {
+        this.conta = conta;
+    }
+
+    public Conta getConta() {
+        return this.conta;
     }
 
 }
