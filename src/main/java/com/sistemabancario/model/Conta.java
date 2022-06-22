@@ -106,7 +106,7 @@ public class Conta implements Cadastro {
     public void addMovimentacao(Movimentacao movimentacao) {
 
         if(movimentacao.getTipo() ==  'C'){
-            movimentacao.getConta().setSaldo(getSaldo() + movimentacao.getValor()+2);
+            movimentacao.getConta().setSaldo(getSaldo() + movimentacao.getValor());
         }else if(movimentacao.getTipo() == 'D'){
             movimentacao.getConta().setSaldo(getSaldo() - movimentacao.getValor());
         }else if(movimentacao.getTipo() != 'D'&& movimentacao.getTipo() != 'C'){

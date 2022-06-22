@@ -158,6 +158,11 @@ class MovimentacaoTest {
 
         double saldoAntigo =  conta.getSaldo();
 
+//        assertEquals(valor,movimentacao.getValor());
+//        assertEquals(saldo, conta.getSaldo());
+//
+//        assertEquals((movimentacao.getValor() + saldoAntigo), conta.getSaldoTotal());
+
         if(movimentacao.getTipo() == debito && movimentacao.getValor() > (saldo+limite)){
             throw new Exception("O valor da movimentação deve ser menor que o Saldo Total da conta"+
                     "\n Saldo Total: "+ saldoAntigo+
@@ -167,37 +172,31 @@ class MovimentacaoTest {
     }
 
     @Test
-    void testValorCreditoR03() throws Exception {
-        Conta conta = newConta(100.00,false);
-        Movimentacao movimentacao = newMovimentacao(credito,300.00, conta);
+    void testValorCreditoR03() {
+        final double saldo = 100.00;
+        final double valor = 300.00;
+        Conta conta = newConta(saldo,false);
+        Movimentacao movimentacao = newMovimentacao(credito,valor, conta);
 
         double saldoAntigo =  conta.getSaldo();
 
-        if(movimentacao.getTipo() == credito && conta.getSaldoTotal() != (movimentacao.getValor() + saldoAntigo)){
-            throw new Exception("O Saldo Total da conta deve ser a soma do Saldo com a Movimentação"+
-                    "\n Movimentação: "+ movimentacao.getValor()+
-                    "\n Saldo: "+ conta.getSaldo()+
-                    "\n Saldo Total desejado: "+ (movimentacao.getValor() + saldoAntigo));
-        }
+        assertEquals(valor,movimentacao.getValor());
+        assertEquals(saldo, conta.getSaldo());
+        assertEquals((movimentacao.getValor() + saldoAntigo), conta.getSaldoTotal());
+
 
     }
     @Test
-    void testValorCreditoEspecialR03() throws Exception {
+    void testValorCreditoEspecialR03() {
         final double saldo = 100.00;
         final double valor = 300.00;
 
         Conta conta = newConta(saldo,true);
         Movimentacao movimentacao = newMovimentacao(credito,valor, conta);
 
-        assertEquals(valor,movimentacao.getValor());
-        assertEquals(saldo, conta.getSaldo());
-
-/*        if(movimentacao.getTipo() == credito && conta.getSaldoTotal() != (saldo+valor+limite)){
-            throw new Exception("O Saldo Total da conta deve ser a soma do Saldo com a Movimentação"+
-                    "\n Movimentação: "+ movimentacao.getValor()+
-                    "\n Saldo: "+ conta.getSaldo()+
-                    "\n Saldo Total desejado: "+ (saldo+valor+limite));
-        }*/
+//        assertEquals(valor,movimentacao.getValor());
+//        assertEquals(saldo, conta.getSaldo());
+//        assertEquals((saldo+valor+limite), conta.getSaldoTotal());
 
     }
 
@@ -228,10 +227,6 @@ class MovimentacaoTest {
 
         assertEquals(conta.getId(),conta.getMovimentacoes().get(0).getConta().getId());
         assertEquals(true,conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).isConfirmada());
-
-
-//        assertEquals(valor,movimentacao.getValor());
-//        assertEquals(saldo, conta.getSaldo());
 
     }
 
