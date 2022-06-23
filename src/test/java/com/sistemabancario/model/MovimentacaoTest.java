@@ -263,4 +263,26 @@ class MovimentacaoTest {
 
     }
 
+    /**
+     * Instancia uma movimentação para uma determinada {@link Conta} bancária,
+     * onde a conta passada deve ser armazenada no atributo {@link #conta} (R05).
+     * @param conta a {@link Conta} para vincular a movimentação.
+     */
+    @Test
+    void testVinculaMovimentacaoDaContaR05() {
+        final double saldo = 0;
+        final double valor = 20.00;
+
+        Conta conta = newConta(saldo,false);
+        Movimentacao movimentacao = newMovimentacao(credito,valor, conta);
+        String descricao = "Teste para ver se a movimentação é a mesma armazenada na conta";
+        movimentacao.setDescricao(descricao);
+
+//        assertEquals(conta.getId(),conta.getMovimentacoes().get(0).getConta().getId());
+        assertEquals(movimentacao.getId(), conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).getId()); // verifica se o id é o mesmo
+        assertEquals(movimentacao.getValor(), conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).getValor()); //verifica se o valor é o mesmo
+        assertEquals(movimentacao.getTipo(), conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).getTipo()); //verifica se o valor é o mesmo
+        assertEquals(movimentacao.getDescricao(), conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).getDescricao()); //verifica se a descrição é o mesma
+
+    }
 }

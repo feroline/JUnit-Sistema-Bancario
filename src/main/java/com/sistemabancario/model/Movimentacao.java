@@ -68,10 +68,6 @@ public class Movimentacao implements Cadastro {
         this.setConfirmada(true);
         this.setConta(conta);
 
-        //TODO: COLOCAR O VALOR ENTRE O ÚLTIMO E ÚLTIMO+1
-
-
-
     }
 
     @Override
