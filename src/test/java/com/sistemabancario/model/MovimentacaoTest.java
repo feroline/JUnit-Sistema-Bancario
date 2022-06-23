@@ -203,13 +203,13 @@ class MovimentacaoTest {
         final double saldo = 100.00;
         final double valor = 300.00;
         Conta conta = newConta(saldo,false);
+        double saldoAntigo =  conta.getSaldo();
         Movimentacao movimentacao = newMovimentacao(credito,valor, conta);
 
-        double saldoAntigo =  conta.getSaldo();
 
         assertEquals(valor,movimentacao.getValor());
-        assertEquals(saldo, conta.getSaldo());
-        assertEquals((movimentacao.getValor() + saldoAntigo), conta.getSaldoTotal());
+        assertEquals(saldo, saldoAntigo);
+        assertEquals( conta.getSaldoTotal(),(movimentacao.getValor() + saldoAntigo));
 
 
     }
