@@ -1,5 +1,7 @@
 package com.sistemabancario.model;
 
+import com.sun.nio.sctp.IllegalReceiveException;
+
 import java.util.Random;
 
 /**
@@ -63,8 +65,8 @@ public class Movimentacao implements Cadastro {
      */
     public Movimentacao(Conta conta){
 
-        this.setConta(conta);
         this.setConfirmada(true);
+        this.setConta(conta);
 
         //TODO: COLOCAR O VALOR ENTRE O ÚLTIMO E ÚLTIMO+1
 
@@ -87,7 +89,11 @@ public class Movimentacao implements Cadastro {
     }
 
     public void setTipo(char tipo){
-        this.tipo = tipo;
+        if (tipo == 'D' || tipo == 'C') {
+            this.tipo = tipo;
+        }else{
+            throw new IllegalArgumentException("Tipo inserido incorreto");
+        }
     }
 
     public String getDescricao() {
@@ -102,6 +108,9 @@ public class Movimentacao implements Cadastro {
         return valor;
     }
     public void setValor(double valor) {
+        if(valor <= 0 ){
+            throw new IllegalArgumentException("O valor da movimentação deve ser maior que 0");
+        }
         this.valor = valor;
     }
 

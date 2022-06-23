@@ -1,12 +1,15 @@
 package com.sistemabancario.model;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 
 import javax.imageio.plugins.jpeg.JPEGImageReadParam;
 import javax.lang.model.type.NullType;
 
+import java.beans.ExceptionListener;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +33,8 @@ class MovimentacaoTest {
     protected final char debito = 'D';
     protected final char credito = 'C';
     protected final double limite = 150.00;
+    protected final String valorIllegal = "O valor da movimentação deve ser maior que 0";
+    protected final String tipoIllegal = "Tipo inserido incorreto";
 
     @Test
     void testGetId() {
@@ -49,7 +54,7 @@ class MovimentacaoTest {
         final Movimentacao movimentacao = new Movimentacao(new Conta());
 
         movimentacao.setTipo(credito);
-        Assertions.assertEquals(movimentacao.getTipo(),credito);
+        Assertions.assertEquals(credito,movimentacao.getTipo());
 
     }
 
@@ -58,17 +63,22 @@ class MovimentacaoTest {
         final Movimentacao movimentacao = new Movimentacao(new Conta());
 
         movimentacao.setTipo(debito);
-        Assertions.assertEquals(movimentacao.getTipo(),debito);
+        Assertions.assertEquals(debito, movimentacao.getTipo());
 
     }
 
 
     @Test
     void testTipoMovimentacaoInvalidoR01(){
+        char tipoIncorreto = '1';
         final Movimentacao movimentacao = new Movimentacao(new Conta());
 
-        movimentacao.setTipo('1');
-        Assertions.assertEquals(movimentacao.getTipo(),debito);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            movimentacao.setTipo(tipoIncorreto);
+        });
+
+        assertEquals(tipoIllegal, exception.getMessage());
+
     }
 
 
@@ -78,23 +88,24 @@ class MovimentacaoTest {
      */
 
     @Test
-    void testValorValidoR02() throws Exception {
+    void testValorValidoR02() {
+        double valor = 100.00;
+
         final Movimentacao movimentacao = new Movimentacao(new Conta());
-        movimentacao.setValor(100.00);
+        movimentacao.setValor(valor);
 
-        if(movimentacao.getValor() <= 0 ){
-            throw new Exception("O valor da movimentação deve ser maior que 0");
-        }
-
+        assertEquals(valor , movimentacao.getValor());
     }
     @Test
-    void testValorInvalidoR02() throws Exception {
+    void testValorInvalidoR02() {
+        double tipoIncorreto = -100.00;
         final Movimentacao movimentacao = new Movimentacao(new Conta());
-        movimentacao.setValor(-100.00);
 
-        if(movimentacao.getValor() <= 0 ){
-            throw new Exception("O valor da movimentação deve ser maior que 0");
-        }
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            movimentacao.setValor(tipoIncorreto);
+        });
+
+        assertEquals(valorIllegal, exception.getMessage());
 
     }
 
@@ -140,7 +151,23 @@ class MovimentacaoTest {
         Conta conta = newConta(saldo,true);
         Movimentacao movimentacao = newMovimentacao(debito,valor, conta);
 
-        if(movimentacao.getTipo() == debito && movimentacao.getValor() > (valor+saldo+limite)){
+        assertEquals(debito, movimentacao.getTipo());
+//        assertAll( "valorTotal",
+
+//                () -> {
+//                    double valorPego = movimentacao.getValor();
+//                    assertNotNull(valorPego);
+//
+//                    assertAll("valor"
+//                            {
+//                                    () -> assertTrue(valorPego.great);
+//                            }
+//                    );
+//                }
+//        );
+
+//       ( (valor+saldo+limite), movimentacao.getValor());
+        if(movimentacao.getTipo() == debito && movimentacao.getTipo() > (valor+saldo+limite)){
             throw new Exception("O valor da movimentação deve ser menor que o Saldo Total da conta"+
                     "\n Saldo Total: "+ conta.getSaldoTotal()+
                     "\n Movimentação: "+ movimentacao.getValor());
@@ -187,7 +214,7 @@ class MovimentacaoTest {
 
     }
     @Test
-    void testValorCreditoEspecialR03() {
+    void testValorCreditoEspecialR03() throws Exception {
         final double saldo = 100.00;
         final double valor = 300.00;
 
@@ -197,6 +224,12 @@ class MovimentacaoTest {
 //        assertEquals(valor,movimentacao.getValor());
 //        assertEquals(saldo, conta.getSaldo());
 //        assertEquals((saldo+valor+limite), conta.getSaldoTotal());
+        if(movimentacao.getTipo() == credito && conta.getSaldoTotal() != (saldo+valor+limite)){
+            throw new Exception("O Saldo Total da conta deve ser a soma do Saldo com a Movimentação"+
+                    "\n Movimentação: "+ movimentacao.getValor()+
+                    "\n Saldo: "+ conta.getSaldo()+
+                    "\n Saldo Total desejado: "+ (saldo+valor+limite));
+        }
 
     }
 
