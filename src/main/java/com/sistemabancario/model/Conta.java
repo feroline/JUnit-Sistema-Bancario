@@ -110,7 +110,7 @@ public class Conta implements Cadastro {
         }else if(movimentacao.getTipo() == 'D'){
             movimentacao.getConta().setSaldo(getSaldo() - movimentacao.getValor());
         }else if(movimentacao.getTipo() != 'D'&& movimentacao.getTipo() != 'C'){
-            System.err.println("Tipo invalido, tipos validos : D = Debito e C = Credito");
+            throw new IllegalArgumentException("Tipo invalido!");
         }
 
         movimentacao.getConta().getMovimentacoes().add(movimentacao);

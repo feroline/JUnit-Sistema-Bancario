@@ -84,7 +84,7 @@ public class Movimentacao implements Cadastro {
         return tipo;
     }
 
-    public void setTipo(char tipo){
+    public void setTipo(char tipo){ //adicionei exceptions para incluir cenários para verificar se mensagens de erros estão sendo apresentadas em cenários inválidos
         if (tipo == 'D' || tipo == 'C') {
             this.tipo = tipo;
         }else{
@@ -103,7 +103,7 @@ public class Movimentacao implements Cadastro {
     public double getValor() {
         return valor;
     }
-    public void setValor(double valor) {
+    public void setValor(double valor) { //adicionei exceptions para incluir cenários para verificar se mensagens de erros estão sendo apresentadas em cenários inválidos
         if(valor <= 0 ){
             throw new IllegalArgumentException("O valor da movimentação deve ser maior que 0");
         } else if (valor > this.getConta().getSaldoTotal()) {
