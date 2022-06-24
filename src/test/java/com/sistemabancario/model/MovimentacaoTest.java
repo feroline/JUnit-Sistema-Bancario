@@ -35,6 +35,7 @@ class MovimentacaoTest {
     protected final double limite = 150.00;
     protected final String valorIllegal = "O valor da movimentação deve ser maior que 0";
     protected final String tipoIllegal = "Tipo inserido incorreto";
+    protected final String debitoEspecialIllegal = "O valor da movimentação deve ser menor que o Saldo Total da conta";
 
     @Test
     void testGetId() {
@@ -114,89 +115,77 @@ class MovimentacaoTest {
      * Valor monetário da movimentação.
      * Se o tipo for débito, o valor da movimentação não pode ser superior ao saldo total da {@link Conta} (R03).
      */
-
-    private Conta newConta(double saldo, boolean especial){
-        Conta conta = new Conta();
-        conta.setSaldo(saldo);
-        conta.setNumero("78945-8");
-        conta.setId(0);
-
-        if (especial){
-            conta.setEspecial(true);
-            conta.setLimite(limite);
-        }else {
-            conta.setEspecial(false);
-        }
-
-        return conta;
-    }
-
-    private Movimentacao newMovimentacao(char tipo, double valor, Conta conta){
-
-        Movimentacao movimentacao = new Movimentacao(conta);
-        movimentacao.setTipo(tipo);
-        movimentacao.setValor(valor);
-        movimentacao.setDescricao("Teste");
-        movimentacao.setConfirmada(true);
-        movimentacao.setId(0);
-        conta.addMovimentacao(movimentacao);
-
-        return movimentacao;
-    }
     @Test
-    void testValorDebitoR03() throws Exception {
+    void testValorDebitoR03() {
         final double saldo = 500.00;
         final double valor = 500.00;
 
-        Conta conta = newConta(saldo,true);
+        Conta conta = newConta(saldo,false);
+        double saldoAntigo =  conta.getSaldo();
         Movimentacao movimentacao = newMovimentacao(debito,valor, conta);
 
         assertEquals(debito, movimentacao.getTipo());
-//        assertAll( "valorTotal",
-
-//                () -> {
-//                    double valorPego = movimentacao.getValor();
-//                    assertNotNull(valorPego);
-//
-//                    assertAll("valor"
-//                            {
-//                                    () -> assertTrue(valorPego.great);
-//                            }
-//                    );
-//                }
-//        );
-
-//       ( (valor+saldo+limite), movimentacao.getValor());
-        if(movimentacao.getTipo() == debito && movimentacao.getTipo() > (valor+saldo+limite)){
-            throw new Exception("O valor da movimentação deve ser menor que o Saldo Total da conta"+
-                    "\n Saldo Total: "+ conta.getSaldoTotal()+
-                    "\n Movimentação: "+ movimentacao.getValor());
-        }
+        assertEquals(valor,movimentacao.getValor());
+        assertEquals(saldo, saldoAntigo);
+        assertEquals(saldo-valor, conta.getSaldoTotal());
 
     }
 
     @Test
-    void testValorDebitoEspecialR03() throws Exception {
+    void testValorDebitoInvalidoR03() {
+        final double saldo = 500.00;
+        final double valor = 1000.00;
+
+        Conta conta = newConta(saldo,false);
+
+        Exception exception = assertThrows(ArithmeticException.class, () -> {
+            Movimentacao movimentacao = newMovimentacao(debito,valor, conta);
+            assertEquals(debito,movimentacao.getTipo());
+        });
+
+        assertEquals(debitoEspecialIllegal, exception.getMessage());
+        //VERIFICANDO SE OS DADOS NÃO FORAM ALTERADOS
+        assertEquals(saldo, conta.getSaldoTotal());
+        assertEquals(saldo, conta.getSaldo());
+
+    }
+
+    @Test
+    void testValorDebitoEspecialR03() {
         final double saldo = 500.00;
         final double valor = 500.00;
 
         Conta conta = newConta(saldo,true);
+        double saldoAntigo =  conta.getSaldo();
         Movimentacao movimentacao = newMovimentacao(debito,valor, conta);
 
-        double saldoAntigo =  conta.getSaldo();
+        assertEquals(debito,movimentacao.getTipo());
+        assertEquals(valor,movimentacao.getValor());
+        assertEquals(saldo, saldoAntigo);
+        assertEquals((saldo+limite)-valor, conta.getSaldoTotal());
+    }
 
-//        assertEquals(valor,movimentacao.getValor());
-//        assertEquals(saldo, conta.getSaldo());
-//
-//        assertEquals((movimentacao.getValor() + saldoAntigo), conta.getSaldoTotal());
 
-        if(movimentacao.getTipo() == debito && movimentacao.getValor() > (saldo+limite)){
-            throw new Exception("O valor da movimentação deve ser menor que o Saldo Total da conta"+
-                    "\n Saldo Total: "+ saldoAntigo+
-                    "\n Movimentação: "+ movimentacao.getValor());
-        }
+    @Test
+    void testValorDebitoEspecialInvalidoR03(){
+        final double saldo = 500.00;
+        final double valor = 800.00;
+
+        Conta conta = newConta(saldo,true);
+
+        Exception exception = assertThrows(ArithmeticException.class, () -> {
+            Movimentacao movimentacao = newMovimentacao(debito,valor, conta);
+            assertEquals(debito,movimentacao.getTipo());
+        });
+
+        assertEquals(debitoEspecialIllegal, exception.getMessage());
+        //VERIFICANDO SE OS DADOS NÃO FORAM ALTERADOS
+        assertEquals((saldo+limite), conta.getSaldoTotal());
+        assertEquals(saldo, conta.getSaldo());
 
     }
+
+
 
     @Test
     void testValorCreditoR03() {
@@ -214,22 +203,17 @@ class MovimentacaoTest {
 
     }
     @Test
-    void testValorCreditoEspecialR03() throws Exception {
+    void testValorCreditoEspecialR03() {
         final double saldo = 100.00;
         final double valor = 300.00;
 
         Conta conta = newConta(saldo,true);
+        double saldoAntigo = conta.getSaldo();
         Movimentacao movimentacao = newMovimentacao(credito,valor, conta);
 
-//        assertEquals(valor,movimentacao.getValor());
-//        assertEquals(saldo, conta.getSaldo());
-//        assertEquals((saldo+valor+limite), conta.getSaldoTotal());
-        if(movimentacao.getTipo() == credito && conta.getSaldoTotal() != (saldo+valor+limite)){
-            throw new Exception("O Saldo Total da conta deve ser a soma do Saldo com a Movimentação"+
-                    "\n Movimentação: "+ movimentacao.getValor()+
-                    "\n Saldo: "+ conta.getSaldo()+
-                    "\n Saldo Total desejado: "+ (saldo+valor+limite));
-        }
+        assertEquals(valor,movimentacao.getValor());
+        assertEquals(saldo, saldoAntigo);
+        assertEquals((saldo+valor+limite), conta.getSaldoTotal());
 
     }
 
@@ -278,11 +262,47 @@ class MovimentacaoTest {
         String descricao = "Teste para ver se a movimentação é a mesma armazenada na conta";
         movimentacao.setDescricao(descricao);
 
-//        assertEquals(conta.getId(),conta.getMovimentacoes().get(0).getConta().getId());
         assertEquals(movimentacao.getId(), conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).getId()); // verifica se o id é o mesmo
         assertEquals(movimentacao.getValor(), conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).getValor()); //verifica se o valor é o mesmo
         assertEquals(movimentacao.getTipo(), conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).getTipo()); //verifica se o valor é o mesmo
         assertEquals(movimentacao.getDescricao(), conta.getMovimentacoes().get(conta.getMovimentacoes().indexOf(movimentacao)).getDescricao()); //verifica se a descrição é o mesma
 
     }
+
+    /**
+     * FUNÇÃO SETAR OS VALORES DE CONTA
+     */
+    private Conta newConta(double saldo, boolean especial){
+        Conta conta = new Conta();
+        conta.setSaldo(saldo);
+        conta.setNumero("78945-8");
+        conta.setId(0);
+
+        if (especial){
+            conta.setEspecial(true);
+            conta.setLimite(limite);
+        }else {
+            conta.setEspecial(false);
+        }
+
+        return conta;
+    }
+
+    /**
+     * FUNÇÃO SETAR OS VALORES DE MOVIMENTAÇÃO
+     */
+    private Movimentacao newMovimentacao(char tipo, double valor, Conta conta){
+
+        Movimentacao movimentacao = new Movimentacao(conta);
+        movimentacao.setTipo(tipo);
+        movimentacao.setValor(valor);
+        movimentacao.setDescricao("Teste");
+        movimentacao.setConfirmada(true);
+        movimentacao.setId(0);
+        conta.addMovimentacao(movimentacao);
+
+        return movimentacao;
+    }
 }
+
+

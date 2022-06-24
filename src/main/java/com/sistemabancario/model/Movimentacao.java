@@ -106,6 +106,8 @@ public class Movimentacao implements Cadastro {
     public void setValor(double valor) {
         if(valor <= 0 ){
             throw new IllegalArgumentException("O valor da movimentação deve ser maior que 0");
+        } else if (valor > this.getConta().getSaldoTotal()) {
+            throw new ArithmeticException( "O valor da movimentação deve ser menor que o Saldo Total da conta");
         }
         this.valor = valor;
     }
