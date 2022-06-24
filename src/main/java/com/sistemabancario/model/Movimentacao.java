@@ -16,6 +16,7 @@ import java.util.Random;
  * </p>
  * 
  * @author Manoel Campos da Silva Filho
+ * @author Ana Carolina Rodrigues Rocha
  */
 public class Movimentacao implements Cadastro {
     private long id;

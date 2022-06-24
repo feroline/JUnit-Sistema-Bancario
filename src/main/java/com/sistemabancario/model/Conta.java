@@ -14,6 +14,7 @@ import java.util.Random;
  * </ul>
  *
  * @author Manoel Campos da Silva Filho
+ * @author Ana Carolina Rodrigues Rocha
  */
 public class Conta implements Cadastro {
 
